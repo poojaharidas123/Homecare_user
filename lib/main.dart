@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:homecare_user/ui/screen/member_screen.dart';
+import 'package:homecare_user/ui/screen/home_screen.dart';
 
 void main() {
   runApp(const MyApp());
@@ -25,7 +25,7 @@ class MyApp extends StatelessWidget {
         scaffoldBackgroundColor: Color(0xFFE3F3DF),
       ),
       debugShowCheckedModeBanner: false,
-      home: const MemberScreen(),
+      home: const HomeScreen(),
     );
   }
 }

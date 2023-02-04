@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:homecare_user/ui/widgets/custom_button.dart';
 
 class LoginScreen extends StatelessWidget {
   const LoginScreen({super.key});
@@ -13,9 +14,7 @@ class LoginScreen extends StatelessWidget {
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
             Expanded(
-              child: Center(
-                child: Image.asset("assets/images/logo.png")
-              ),
+              child: Center(child: Image.asset("assets/images/logo.png")),
             ),
             Text(
               "Sign In",
@@ -34,24 +33,16 @@ class LoginScreen extends StatelessWidget {
             const TextField(
               obscureText: true,
               decoration: InputDecoration(
-                border: OutlineInputBorder(borderRadius: BorderRadius.all(Radius.circular(45))),
+                border: OutlineInputBorder(
+                    borderRadius: BorderRadius.all(Radius.circular(45))),
               ),
             ),
             SizedBox(
               height: 5,
             ),
-            Material(
-              color: Color(0xFFAAD013),
-              shape:RoundedRectangleBorder(borderRadius: BorderRadius.circular(45)),
-              child: Padding(
-                padding: const EdgeInsets.all(15.0),
-                child: Row(
-                  mainAxisAlignment: MainAxisAlignment.center,
-                  children: [
-                    Text("Continue"),
-                  ],
-                ),
-              ),
+            CustomButton(
+              label: 'Continue',
+              onPressed: () {},
             ),
             SizedBox(
               height: 10,

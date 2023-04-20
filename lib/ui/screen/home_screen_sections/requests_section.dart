@@ -269,11 +269,65 @@ class _RequestItemState extends State<RequestItem> {
             if (widget.requestDetails['status'] == 'active')
               CustomButton(
                 label: 'Make Payment',
-                onPressed: () {},
+                onPressed: () {
+                  showDialog(
+                    context: context,
+                    builder: (context) => MakePaymentDialog(
+                      amount: widget.requestDetails['amount'],
+                      paid: widget.requestDetails['paid_amount'],
+                    ),
+                  );
+                },
               ),
           ],
         ),
       ),
+    );
+  }
+}
+
+class MakePaymentDialog extends StatefulWidget {
+  final int amount, paid;
+  const MakePaymentDialog({
+    super.key,
+    required this.amount,
+    required this.paid,
+  });
+
+  @override
+  State<MakePaymentDialog> createState() => _MakePaymentDialogState();
+}
+
+class _MakePaymentDialogState extends State<MakePaymentDialog> {
+  double sliderValue = 1;
+  @override
+  Widget build(BuildContext context) {
+    return CustomAlertDialog(
+      title: 'Payment',
+      message: 'Select amount to make payment',
+      content: Column(
+        children: [
+          const SizedBox(height: 15),
+          Text(
+            '₹${sliderValue.toInt().toString()}',
+            style: Theme.of(context).textTheme.headlineSmall?.copyWith(
+                  color: Colors.green,
+                  fontWeight: FontWeight.bold,
+                ),
+          ),
+          Slider(
+            min: 1,
+            max: double.parse((widget.amount - widget.paid).toString()),
+            value: sliderValue,
+            onChanged: (value) {
+              sliderValue = value;
+              setState(() {});
+            },
+          ),
+        ],
+      ),
+      primaryButtonLabel: 'Pay',
+      primaryOnPressed: () {},
     );
   }
 }

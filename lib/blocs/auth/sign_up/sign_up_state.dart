@@ -7,11 +7,7 @@ class SignUpInitialState extends SignUpState {}
 
 class SignUpLoadingState extends SignUpState {}
 
-class SignUpSuccessState extends SignUpState {
-  final Map<String, dynamic> userDetails;
-
-  SignUpSuccessState({required this.userDetails});
-}
+class SignUpSuccessState extends SignUpState {}
 
 class SignUpFailureState extends SignUpState {
   final String message;

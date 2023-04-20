@@ -1,50 +1,109 @@
+import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:homecare_user/blocs/manage_patients/manage_patients_bloc.dart';
 import 'package:homecare_user/ui/widgets/custom_alert_dialog.dart';
 import 'package:homecare_user/ui/widgets/gender_selector.dart';
 import 'package:homecare_user/util/value_validators.dart';
 import 'package:homecare_user/values/values.dart';
 import 'package:intl/intl.dart';
 
-import '../../widgets/custom_icon_button.dart';
+import '../../widgets/custom_add_button.dart';
 import '../../widgets/custom_patient_card.dart';
 
-class MemberSection extends StatelessWidget {
+class MemberSection extends StatefulWidget {
   const MemberSection({super.key});
 
   @override
+  State<MemberSection> createState() => _MemberSectionState();
+}
+
+class _MemberSectionState extends State<MemberSection> {
+  final ManagePatientsBloc managePatientsBloc = ManagePatientsBloc();
+
+  @override
+  void initState() {
+    super.initState();
+    managePatientsBloc.add(GetAllPatientsEvent());
+  }
+
+  @override
   Widget build(BuildContext context) {
-    return ListView(
-      padding: const EdgeInsets.only(
-        left: 20,
-        right: 20,
-        top: 20,
-        bottom: 100,
-      ),
-      children: [
-        ListView.separated(
-          shrinkWrap: true,
-          physics: const NeverScrollableScrollPhysics(),
-          itemBuilder: (context, index) => PatientCard(),
-          separatorBuilder: (context, index) => const SizedBox(height: 10),
-          itemCount: 1,
-        ),
-        const SizedBox(height: 15),
-        CustomIconButton(
-          onPressed: () {
+    return BlocProvider<ManagePatientsBloc>.value(
+      value: managePatientsBloc,
+      child: BlocConsumer<ManagePatientsBloc, ManagePatientsState>(
+        listener: (context, state) {
+          if (state is ManagePatientsFailureState) {
             showDialog(
               context: context,
-              builder: (context) => MemberForm(),
+              builder: (context) => CustomAlertDialog(
+                title: 'Failure',
+                message: state.message,
+                primaryButtonLabel: 'Retry',
+                primaryOnPressed: () {
+                  managePatientsBloc.add(GetAllPatientsEvent());
+                },
+              ),
             );
-          },
-        ),
-      ],
+          }
+        },
+        builder: (context, state) {
+          return ListView(
+            padding: const EdgeInsets.only(
+              left: 20,
+              right: 20,
+              top: 20,
+              bottom: 100,
+            ),
+            children: [
+              state is ManagePatientsSuccessState
+                  ? state.patients.isNotEmpty
+                      ? ListView.separated(
+                          shrinkWrap: true,
+                          physics: const NeverScrollableScrollPhysics(),
+                          itemBuilder: (context, index) => PatientCard(
+                            patientDetails: state.patients[index],
+                            managePatientsBloc: managePatientsBloc,
+                          ),
+                          separatorBuilder: (context, index) =>
+                              const SizedBox(height: 10),
+                          itemCount: state.patients.length,
+                        )
+                      : const Center(
+                          child: Text(
+                            'No Members found',
+                          ),
+                        )
+                  : const Padding(
+                      padding: EdgeInsets.all(100),
+                      child: CupertinoActivityIndicator(),
+                    ),
+              const SizedBox(height: 15),
+              CustomAddButton(
+                onPressed: () {
+                  showDialog(
+                    context: context,
+                    builder: (context) => MemberForm(
+                      managePatientsBloc: managePatientsBloc,
+                    ),
+                  );
+                },
+              ),
+            ],
+          );
+        },
+      ),
     );
   }
 }
 
 class MemberForm extends StatefulWidget {
+  final ManagePatientsBloc managePatientsBloc;
+  final Map<String, dynamic>? patientDetails;
   const MemberForm({
     super.key,
+    required this.managePatientsBloc,
+    this.patientDetails,
   });
 
   @override
@@ -60,7 +119,22 @@ class _MemberFormState extends State<MemberForm> {
   final TextEditingController _addressC = TextEditingController();
   final TextEditingController _conditionC = TextEditingController();
 
-  List<Map<String, dynamic>> medications = [];
+  List<dynamic> medications = [];
+
+  @override
+  void initState() {
+    super.initState();
+    if (widget.patientDetails != null) {
+      medications = widget.patientDetails!['medications'];
+      gender = widget.patientDetails!['gender'];
+      _nameC.text = widget.patientDetails!['name'];
+      _phoneC.text = widget.patientDetails!['phone'];
+      _dobC.text = DateFormat('yyyy-MM-dd')
+          .format(DateTime.parse(widget.patientDetails!['dob']));
+      _addressC.text = widget.patientDetails!['address'];
+      _conditionC.text = widget.patientDetails!['conditions'];
+    }
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -206,7 +280,7 @@ class _MemberFormState extends State<MemberForm> {
                 itemCount: medications.length,
               ),
               const SizedBox(height: 10),
-              CustomIconButton(
+              CustomAddButton(
                 onPressed: () async {
                   TextEditingController _medicineC = TextEditingController();
                   TextEditingController _timingC = TextEditingController();
@@ -271,7 +345,33 @@ class _MemberFormState extends State<MemberForm> {
       primaryButtonLabel: 'Save',
       primaryOnPressed: () {
         if (formKey.currentState!.validate()) {
-          //
+          if (widget.patientDetails != null) {
+            widget.managePatientsBloc.add(
+              EditPatientEvent(
+                patientId: widget.patientDetails!['id'],
+                name: _nameC.text.trim(),
+                medications: medications,
+                dob: _dobC.text.trim(),
+                gender: gender,
+                phone: _phoneC.text.trim(),
+                address: _addressC.text.trim(),
+                condition: _conditionC.text.trim(),
+              ),
+            );
+          } else {
+            widget.managePatientsBloc.add(
+              AddPatientEvent(
+                name: _nameC.text.trim(),
+                medications: medications,
+                dob: _dobC.text.trim(),
+                gender: gender,
+                phone: _phoneC.text.trim(),
+                address: _addressC.text.trim(),
+                condition: _conditionC.text.trim(),
+              ),
+            );
+          }
+          Navigator.pop(context);
         }
       },
     );

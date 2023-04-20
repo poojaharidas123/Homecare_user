@@ -2,30 +2,25 @@ import 'package:flutter/material.dart';
 
 class CustomIconButton extends StatelessWidget {
   final Function() onPressed;
+  final IconData iconData;
+  final Color? color;
   const CustomIconButton({
-    Key? key,
+    super.key,
     required this.onPressed,
-  }) : super(key: key);
+    required this.iconData,
+    this.color,
+  });
 
   @override
   Widget build(BuildContext context) {
-    return Material(
-      color: Colors.white,
-      shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(45)),
-      child: InkWell(
-        onTap: onPressed,
-        borderRadius: BorderRadius.circular(45),
-        child: Padding(
-          padding: const EdgeInsets.all(15.0),
-          child: Row(
-            mainAxisAlignment: MainAxisAlignment.center,
-            children: const [
-              Icon(
-                Icons.add,
-                color: Colors.grey,
-              ),
-            ],
-          ),
+    return InkWell(
+      borderRadius: BorderRadius.circular(30),
+      onTap: onPressed,
+      child: Padding(
+        padding: const EdgeInsets.all(5.0),
+        child: Icon(
+          iconData,
+          color: color ?? Colors.blue[900],
         ),
       ),
     );

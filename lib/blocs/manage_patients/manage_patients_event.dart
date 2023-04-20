@@ -11,7 +11,7 @@ class GetAllPatientsEvent extends ManagePatientsEvent {
 
 class AddPatientEvent extends ManagePatientsEvent {
   final String name, gender, phone, dob, address, condition;
-  final List<Map<String, dynamic>> medications;
+  final List<dynamic> medications;
 
   AddPatientEvent({
     required this.name,
@@ -27,7 +27,7 @@ class AddPatientEvent extends ManagePatientsEvent {
 class EditPatientEvent extends ManagePatientsEvent {
   final String name, gender, phone, dob, address, condition;
   final int patientId;
-  final List<Map<String, dynamic>> medications;
+  final List<dynamic> medications;
 
   EditPatientEvent({
     required this.patientId,

@@ -1,4 +1,7 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:homecare_user/blocs/manage_nurse_requests/manage_nurse_request_bloc.dart';
+import 'package:homecare_user/blocs/manage_patients/manage_patients_bloc.dart';
 import 'package:homecare_user/ui/screen/home_screen.dart';
 import 'package:homecare_user/ui/screen/login_screen.dart';
 import 'package:homecare_user/values/values.dart';
@@ -19,46 +22,53 @@ class MyApp extends StatelessWidget {
   // This widget is the root of your application.
   @override
   Widget build(BuildContext context) {
-    return MaterialApp(
-      title: 'Flutter Demo',
-      theme: ThemeData(
-        primarySwatch: Colors.green,
-        appBarTheme: const AppBarTheme(
-          backgroundColor: Colors.white,
-          centerTitle: true,
-          iconTheme: IconThemeData(
-            color: Colors.black,
-          ),
+    return MultiBlocProvider(
+      providers: [
+        BlocProvider(
+          create: (context) => ManageNurseRequestBloc(),
         ),
-        inputDecorationTheme: InputDecorationTheme(
-          filled: true,
-          fillColor: Colors.white,
-          contentPadding: const EdgeInsets.symmetric(
-            horizontal: 20,
-            vertical: 15,
-          ),
-          iconColor: primaryColor,
-          prefixIconColor: primaryColor,
-          suffixIconColor: primaryColor,
-          border: OutlineInputBorder(
-            borderRadius: BorderRadius.circular(30),
-            borderSide: const BorderSide(
-              width: 1,
-              color: Colors.black12,
+      ],
+      child: MaterialApp(
+        title: 'Flutter Demo',
+        theme: ThemeData(
+          primarySwatch: Colors.green,
+          appBarTheme: const AppBarTheme(
+            backgroundColor: Colors.white,
+            centerTitle: true,
+            iconTheme: IconThemeData(
+              color: Colors.black,
             ),
           ),
-          enabledBorder: OutlineInputBorder(
-            borderRadius: BorderRadius.circular(30),
-            borderSide: const BorderSide(
-              width: 1,
-              color: Colors.black12,
+          inputDecorationTheme: InputDecorationTheme(
+            filled: true,
+            fillColor: Colors.white,
+            contentPadding: const EdgeInsets.symmetric(
+              horizontal: 20,
+              vertical: 15,
+            ),
+            iconColor: primaryColor,
+            prefixIconColor: primaryColor,
+            suffixIconColor: primaryColor,
+            border: OutlineInputBorder(
+              borderRadius: BorderRadius.circular(30),
+              borderSide: const BorderSide(
+                width: 1,
+                color: Colors.black12,
+              ),
+            ),
+            enabledBorder: OutlineInputBorder(
+              borderRadius: BorderRadius.circular(30),
+              borderSide: const BorderSide(
+                width: 1,
+                color: Colors.black12,
+              ),
             ),
           ),
+          scaffoldBackgroundColor: secondaryColor,
         ),
-        scaffoldBackgroundColor: secondaryColor,
+        debugShowCheckedModeBanner: false,
+        home: const LoginScreen(),
       ),
-      debugShowCheckedModeBanner: false,
-      home: const LoginScreen(),
     );
   }
 }

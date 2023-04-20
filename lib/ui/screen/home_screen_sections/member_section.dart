@@ -8,6 +8,7 @@ import 'package:homecare_user/util/value_validators.dart';
 import 'package:homecare_user/values/values.dart';
 import 'package:intl/intl.dart';
 
+import '../../../blocs/manage_nurse_requests/manage_nurse_request_bloc.dart';
 import '../../widgets/custom_add_button.dart';
 import '../../widgets/custom_patient_card.dart';
 
@@ -31,14 +32,14 @@ class _MemberSectionState extends State<MemberSection> {
   Widget build(BuildContext context) {
     return BlocProvider<ManagePatientsBloc>.value(
       value: managePatientsBloc,
-      child: BlocConsumer<ManagePatientsBloc, ManagePatientsState>(
-        listener: (context, state) {
-          if (state is ManagePatientsFailureState) {
+      child: BlocConsumer<ManageNurseRequestBloc, ManageNurseRequestState>(
+        listener: (context, mState) {
+          if (mState is ManageNurseRequestFailureState) {
             showDialog(
               context: context,
               builder: (context) => CustomAlertDialog(
                 title: 'Failure',
-                message: state.message,
+                message: mState.message,
                 primaryButtonLabel: 'Retry',
                 primaryOnPressed: () {
                   managePatientsBloc.add(GetAllPatientsEvent());
@@ -47,49 +48,69 @@ class _MemberSectionState extends State<MemberSection> {
             );
           }
         },
-        builder: (context, state) {
-          return ListView(
-            padding: const EdgeInsets.only(
-              left: 20,
-              right: 20,
-              top: 20,
-              bottom: 100,
-            ),
-            children: [
-              state is ManagePatientsSuccessState
-                  ? state.patients.isNotEmpty
-                      ? ListView.separated(
-                          shrinkWrap: true,
-                          physics: const NeverScrollableScrollPhysics(),
-                          itemBuilder: (context, index) => PatientCard(
-                            patientDetails: state.patients[index],
-                            managePatientsBloc: managePatientsBloc,
-                          ),
-                          separatorBuilder: (context, index) =>
-                              const SizedBox(height: 10),
-                          itemCount: state.patients.length,
-                        )
-                      : const Center(
-                          child: Text(
-                            'No Members found',
-                          ),
-                        )
-                  : const Padding(
-                      padding: EdgeInsets.all(100),
-                      child: CupertinoActivityIndicator(),
-                    ),
-              const SizedBox(height: 15),
-              CustomAddButton(
-                onPressed: () {
-                  showDialog(
-                    context: context,
-                    builder: (context) => MemberForm(
-                      managePatientsBloc: managePatientsBloc,
-                    ),
-                  );
-                },
-              ),
-            ],
+        builder: (context, mState) {
+          return BlocConsumer<ManagePatientsBloc, ManagePatientsState>(
+            listener: (context, state) {
+              if (state is ManagePatientsFailureState) {
+                showDialog(
+                  context: context,
+                  builder: (context) => CustomAlertDialog(
+                    title: 'Failure',
+                    message: state.message,
+                    primaryButtonLabel: 'Retry',
+                    primaryOnPressed: () {
+                      managePatientsBloc.add(GetAllPatientsEvent());
+                    },
+                  ),
+                );
+              }
+            },
+            builder: (context, state) {
+              return ListView(
+                padding: const EdgeInsets.only(
+                  left: 20,
+                  right: 20,
+                  top: 20,
+                  bottom: 100,
+                ),
+                children: [
+                  state is ManagePatientsSuccessState &&
+                          mState is! ManageNurseRequestLoadingState
+                      ? state.patients.isNotEmpty
+                          ? ListView.separated(
+                              shrinkWrap: true,
+                              physics: const NeverScrollableScrollPhysics(),
+                              itemBuilder: (context, index) => PatientCard(
+                                patientDetails: state.patients[index],
+                                managePatientsBloc: managePatientsBloc,
+                              ),
+                              separatorBuilder: (context, index) =>
+                                  const SizedBox(height: 10),
+                              itemCount: state.patients.length,
+                            )
+                          : const Center(
+                              child: Text(
+                                'No Members found',
+                              ),
+                            )
+                      : const Padding(
+                          padding: EdgeInsets.all(100),
+                          child: CupertinoActivityIndicator(),
+                        ),
+                  const SizedBox(height: 15),
+                  CustomAddButton(
+                    onPressed: () {
+                      showDialog(
+                        context: context,
+                        builder: (context) => MemberForm(
+                          managePatientsBloc: managePatientsBloc,
+                        ),
+                      );
+                    },
+                  ),
+                ],
+              );
+            },
           );
         },
       ),

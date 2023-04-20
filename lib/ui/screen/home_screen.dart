@@ -1,9 +1,13 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:homecare_user/ui/screen/home_screen_sections/member_section.dart';
 import 'package:homecare_user/ui/screen/home_screen_sections/settings_section.dart';
 import 'package:homecare_user/ui/screen/home_screen_sections/requests_section.dart';
+import 'package:homecare_user/ui/widgets/custom_alert_dialog.dart';
+import 'package:homecare_user/ui/widgets/custom_dropdown.dart';
 
+import '../../blocs/manage_nurse_requests/manage_nurse_request_bloc.dart';
 import '../../values/values.dart';
 
 class HomeScreen extends StatefulWidget {
@@ -47,17 +51,16 @@ class _HomeScreenState extends State<HomeScreen>
       body: TabBarView(
         physics: const NeverScrollableScrollPhysics(),
         controller: tabController,
-        children: [
+        children: const [
           RequestSection(),
           MemberSection(),
           SettingsSection(),
         ],
       ),
-      floatingActionButtonLocation: FloatingActionButtonLocation.centerDocked,
-      floatingActionButton: Material(
+      bottomNavigationBar: Material(
         elevation: 10,
         color: Colors.white,
-        borderRadius: BorderRadius.only(
+        borderRadius: const BorderRadius.only(
           topLeft: Radius.circular(15),
           topRight: Radius.circular(15),
         ),
@@ -70,6 +73,8 @@ class _HomeScreenState extends State<HomeScreen>
                 iconData: Icons.add_box_outlined,
                 label: "Request",
                 onPressed: () {
+                  BlocProvider.of<ManageNurseRequestBloc>(context)
+                      .add(GetAllNurseRequestEvent());
                   tabController.animateTo(0);
                 },
                 isSelected: tabController.index == 0,

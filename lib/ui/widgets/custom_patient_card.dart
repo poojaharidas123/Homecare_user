@@ -1,63 +1,120 @@
 import 'package:flutter/material.dart';
 
+import 'custom_card.dart';
+import 'label_with_text.dart';
+
 class PatientCard extends StatelessWidget {
   const PatientCard({
-    Key? key,
-  }) : super(key: key);
+    super.key,
+  });
 
   @override
   Widget build(BuildContext context) {
-    return Material(
-      color: Colors.white,
-      borderRadius: BorderRadius.circular(60),
-      child: Padding(
-        padding: const EdgeInsets.all(10.0),
-        child: Row(
-          children: [
-            ClipRRect(
-              borderRadius: BorderRadius.circular(100),
-              child: Image.network(
-                "https://amritammu.com/wp-content/uploads/2020/04/Newborn-Baby-Photoshoot-Amrit-Ammu-Photography-90.jpg",
-                width: 60,
-                height: 60,
-                fit: BoxFit.cover,
-              ),
-            ),
-            SizedBox(
-              width: 10,
-            ),
-            Expanded(
-              child: Column(
-                crossAxisAlignment: CrossAxisAlignment.start,
-                children: [
-                  Text(
-                    style: TextStyle(
-                      fontSize: 15,
+    return CustomCard(
+      child: SizedBox(
+        width: 320,
+        child: Padding(
+          padding: const EdgeInsets.symmetric(
+            horizontal: 20,
+            vertical: 20,
+          ),
+          child: Column(
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
+              Text(
+                '#UserId',
+                style: Theme.of(context).textTheme.bodySmall?.copyWith(
                       fontWeight: FontWeight.bold,
                     ),
-                    "Krithya M P",
+              ),
+              const SizedBox(height: 10),
+              Text(
+                'Krithya M P',
+                style: Theme.of(context).textTheme.titleMedium?.copyWith(
+                      fontWeight: FontWeight.bold,
+                    ),
+              ),
+              const SizedBox(height: 5),
+              Text(
+                '20 Female',
+                style: Theme.of(context).textTheme.titleSmall?.copyWith(
+                    fontWeight: FontWeight.bold, color: Colors.black54),
+              ),
+              const SizedBox(
+                height: 15,
+              ),
+              const LabelWithText(
+                label: 'Phone No',
+                text: '9876765654',
+              ),
+              const SizedBox(
+                height: 10,
+              ),
+              const LabelWithText(
+                label: 'Email',
+                text: 'someemail@gmail.com',
+              ),
+              const SizedBox(
+                height: 10,
+              ),
+              const LabelWithText(
+                label: 'Address',
+                text: 'Xyz house, P.O Pallikkunnu,Kannur',
+              ),
+              const SizedBox(
+                height: 10,
+              ),
+              const LabelWithText(
+                label: 'Conditions',
+                text: 'Some Conditions',
+              ),
+              const Divider(height: 30),
+              const Text(
+                'Medications',
+                style: TextStyle(color: Colors.grey, fontSize: 10),
+              ),
+              const SizedBox(
+                height: 5,
+              ),
+              Row(
+                mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                children: [
+                  Text(
+                    'Some Medication',
+                    style: Theme.of(context).textTheme.titleSmall?.copyWith(
+                          fontWeight: FontWeight.bold,
+                        ),
                   ),
-                  SizedBox(height: 6),
-                  Row(
-                    children: [
-                      Text("5 Months"),
-                      SizedBox(
-                        width: 10,
-                      ),
-                      Text("F"),
-                    ],
+                  Text(
+                    '0-1-0-0',
+                    style: Theme.of(context).textTheme.titleSmall?.copyWith(
+                          fontWeight: FontWeight.bold,
+                        ),
                   ),
                 ],
               ),
-            ),
-            Padding(
-              padding: const EdgeInsets.only(right: 15.0),
-              child: Icon(
-                Icons.check_circle_outline,
-                color: Color(0xFFAAD013),
+              const SizedBox(
+                height: 5,
               ),
-            ),
-          ],
+              Row(
+                mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                children: [
+                  Text(
+                    'Some Medication',
+                    style: Theme.of(context).textTheme.titleSmall?.copyWith(
+                          fontWeight: FontWeight.bold,
+                        ),
+                  ),
+                  Text(
+                    '0-1-0-0',
+                    style: Theme.of(context).textTheme.titleSmall?.copyWith(
+                          fontWeight: FontWeight.bold,
+                        ),
+                  ),
+                ],
+              ),
+            ],
+          ),
         ),
       ),
     );

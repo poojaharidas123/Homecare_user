@@ -1,7 +1,10 @@
 import 'package:flutter/material.dart';
+import 'package:google_fonts/google_fonts.dart';
 import 'package:homecare_user/ui/screen/home_screen_sections/member_section.dart';
-import 'package:homecare_user/ui/screen/home_screen_sections/payment_section.dart';
+import 'package:homecare_user/ui/screen/home_screen_sections/settings_section.dart';
 import 'package:homecare_user/ui/screen/home_screen_sections/requests_section.dart';
+
+import '../../values/values.dart';
 
 class HomeScreen extends StatefulWidget {
   const HomeScreen({super.key});
@@ -28,21 +31,25 @@ class _HomeScreenState extends State<HomeScreen>
     return Scaffold(
       appBar: AppBar(
         centerTitle: false,
-        elevation: 0,
+        elevation: 1,
         backgroundColor: Theme.of(context).scaffoldBackgroundColor,
         title: Text(
           "HomeCare",
-          style: Theme.of(context).textTheme.titleLarge?.copyWith(
-                color: Colors.green,
-              ),
+          style: GoogleFonts.dynalight(
+            textStyle: Theme.of(context).textTheme.headlineMedium?.copyWith(
+                  fontWeight: FontWeight.normal,
+                  color: primaryColor,
+                ),
+          ),
         ),
       ),
       body: TabBarView(
+        physics: const NeverScrollableScrollPhysics(),
         controller: tabController,
         children: [
           RequestSection(),
           MemberSection(),
-          PaymentSection(),
+          SettingsSection(),
         ],
       ),
       floatingActionButtonLocation: FloatingActionButtonLocation.centerDocked,
@@ -76,7 +83,7 @@ class _HomeScreenState extends State<HomeScreen>
               ),
               BottomNavBarButton(
                 iconData: Icons.payment_rounded,
-                label: "Payment",
+                label: "Settings",
                 onPressed: () {
                   tabController.animateTo(2);
                 },

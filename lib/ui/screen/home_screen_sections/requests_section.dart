@@ -3,41 +3,37 @@ import 'package:flutter/material.dart';
 import 'package:flutter/src/widgets/container.dart';
 import 'package:flutter/src/widgets/framework.dart';
 import 'package:homecare_user/ui/widgets/custom_button.dart';
+import 'package:homecare_user/ui/widgets/label_with_text.dart';
 
 class RequestSection extends StatelessWidget {
   const RequestSection({super.key});
 
   @override
   Widget build(BuildContext context) {
-    return Stack(
+    return Column(
       children: [
-        ListView.separated(
-          padding: EdgeInsets.only(
-            left: 20,
-            right: 20,
-            top: 20,
-            bottom: 100,
-          ),
-          itemBuilder: (context, index) => RequestItem(),
-          itemCount: 10,
-          separatorBuilder: (context, index) => SizedBox(
-            height: 10,
-          ),
+        const SizedBox(height: 20),
+        CupertinoSlidingSegmentedControl<String>(
+          children: const {
+            'active': Text('Active'),
+            'pending': Text('Pending'),
+            'rejected': Text('Rejected'),
+          },
+          onValueChanged: (status) {},
+          groupValue: 'active',
         ),
-        Align(
-          alignment: Alignment.bottomRight,
-          child: Padding(
+        Expanded(
+          child: ListView.separated(
             padding: const EdgeInsets.only(
-              bottom: 80,
+              left: 20,
               right: 20,
+              top: 20,
+              bottom: 100,
             ),
-            child: SizedBox(
-              width: 130,
-              child: CustomButton(
-                label: 'Request',
-                iconData: Icons.add_circle_outline_outlined,
-                onPressed: () {},
-              ),
+            itemBuilder: (context, index) => RequestItem(),
+            itemCount: 10,
+            separatorBuilder: (context, index) => const SizedBox(
+              height: 10,
             ),
           ),
         ),
@@ -55,93 +51,139 @@ class RequestItem extends StatelessWidget {
   Widget build(BuildContext context) {
     return Material(
       color: Colors.white,
-      borderRadius: BorderRadius.circular(45),
+      borderRadius: BorderRadius.circular(30),
       child: Padding(
-        padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 20),
+        padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 15),
         child: Column(
+          crossAxisAlignment: CrossAxisAlignment.start,
           children: [
             Row(
+              mainAxisAlignment: MainAxisAlignment.spaceBetween,
               children: [
-                Text('11/11/2022'),
-                SizedBox(
-                  width: 230,
-                ),
-                Text('pending'),
-              ],
-            ),
-            SizedBox(
-              height: 10,
-            ),
-            Row(
-              children: [
-                ClipRRect(
-                  borderRadius: BorderRadius.circular(100),
-                  child: Image.network(
-                    "https://amritammu.com/wp-content/uploads/2020/04/Newborn-Baby-Photoshoot-Amrit-Ammu-Photography-90.jpg",
-                    width: 80,
-                    height: 80,
-                    fit: BoxFit.cover,
-                  ),
-                ),
-                SizedBox(width: 15),
-                Column(children: [
-                  Text(
-                    'Krithya M P',
-                    style: TextStyle(
-                      fontSize: 15,
-                      fontWeight: FontWeight.bold,
-                    ),
-                  ),
-                  SizedBox(height: 5),
-                  Row(
-                    children: [
-                      Text('5 months'),
-                      SizedBox(
-                        width: 5,
+                Text(
+                  '#1231231',
+                  style: Theme.of(context).textTheme.bodySmall?.copyWith(
+                        fontWeight: FontWeight.bold,
+                        color: Colors.black38,
                       ),
-                      Text('F'),
-                    ],
-                  )
-                ])
+                ),
+                Text(
+                  'pending',
+                  style: Theme.of(context).textTheme.bodyMedium?.copyWith(
+                        fontWeight: FontWeight.bold,
+                        color: Colors.black38,
+                      ),
+                ),
               ],
             ),
-            Divider(),
+            const SizedBox(
+              height: 10,
+            ),
+            Text(
+              'Krithya M P',
+              style: Theme.of(context).textTheme.titleMedium?.copyWith(
+                    fontWeight: FontWeight.bold,
+                    color: Colors.black,
+                  ),
+            ),
+            const SizedBox(height: 5),
+            Text(
+              '10 female',
+              style: Theme.of(context).textTheme.titleSmall?.copyWith(
+                    fontWeight: FontWeight.bold,
+                    color: Colors.black54,
+                  ),
+            ),
+            const Divider(),
             Row(
+              mainAxisAlignment: MainAxisAlignment.spaceBetween,
               children: [
-                Text('Date Range :'),
-                SizedBox(
-                  width: 5,
+                Text(
+                  'Date Range :',
+                  style: Theme.of(context).textTheme.titleSmall?.copyWith(
+                        color: Colors.black45,
+                      ),
                 ),
-                Text('01/03/2023'),
-                SizedBox(
-                  width: 5,
+                const SizedBox(width: 5),
+                Text(
+                  '01/03/2023 to 01/05/2023',
+                  style: Theme.of(context).textTheme.titleSmall?.copyWith(
+                        color: Colors.black,
+                      ),
                 ),
-                Text('-'),
-                SizedBox(
-                  width: 5,
-                ),
-                Text('31/03/2023'),
               ],
             ),
-            SizedBox(
+            const SizedBox(
               height: 10,
             ),
             Row(
+              mainAxisAlignment: MainAxisAlignment.spaceBetween,
               children: [
-                Text('Time Range :'),
-                SizedBox(
-                  width: 5,
+                Text(
+                  'Time Range :',
+                  style: Theme.of(context).textTheme.titleSmall?.copyWith(
+                        color: Colors.black45,
+                      ),
                 ),
-                Text('01:00 PM'),
-                SizedBox(
-                  width: 5,
+                const SizedBox(width: 5),
+                Text(
+                  '10:00 AM to 05:00 PM',
+                  style: Theme.of(context).textTheme.titleSmall?.copyWith(
+                        color: Colors.black,
+                      ),
                 ),
-                Text('-'),
-                SizedBox(
-                  width: 5,
-                ),
-                Text('04:00 PM'),
               ],
+            ),
+            const Divider(),
+            Row(
+              mainAxisAlignment: MainAxisAlignment.spaceBetween,
+              children: const [
+                LabelWithText(
+                  label: 'Assigned Nurse',
+                  text: 'Nurse Name',
+                ),
+                SizedBox(width: 5),
+                LabelWithText(
+                  alignment: CrossAxisAlignment.end,
+                  label: 'Age & Gender',
+                  text: '30 female',
+                ),
+              ],
+            ),
+            const Divider(),
+            Text(
+              'Reason',
+              style: Theme.of(context).textTheme.titleSmall?.copyWith(
+                    color: Colors.black45,
+                  ),
+            ),
+            const SizedBox(height: 2.5),
+            Text(
+              'Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam',
+              style: Theme.of(context).textTheme.bodyMedium?.copyWith(
+                    color: Colors.black,
+                  ),
+            ),
+            const Divider(),
+            Row(
+              mainAxisAlignment: MainAxisAlignment.spaceBetween,
+              children: const [
+                LabelWithText(
+                  label: 'Total Fee',
+                  text: '10000',
+                ),
+                SizedBox(width: 5),
+                LabelWithText(
+                  alignment: CrossAxisAlignment.end,
+                  label: 'Paid',
+                  text: '5000',
+                ),
+              ],
+            ),
+            const Divider(),
+            CustomButton(
+              label: 'Make Payment',
+              onPressed: () {},
             ),
           ],
         ),

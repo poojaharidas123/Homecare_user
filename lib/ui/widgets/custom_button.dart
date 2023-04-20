@@ -1,10 +1,13 @@
 import 'package:flutter/material.dart';
 
+import '../../values/values.dart';
+
 class CustomButton extends StatelessWidget {
   final String label;
   final Function() onPressed;
   final BorderRadius? borderRadius;
   final IconData? iconData;
+  final Color? buttonColor, textColor;
 
   const CustomButton({
     Key? key,
@@ -12,12 +15,14 @@ class CustomButton extends StatelessWidget {
     required this.onPressed,
     this.borderRadius,
     this.iconData,
+    this.buttonColor = primaryColor,
+    this.textColor = Colors.white,
   }) : super(key: key);
 
   @override
   Widget build(BuildContext context) {
     return Material(
-      color: Color(0xFFAAD013),
+      color: buttonColor,
       borderRadius: borderRadius ?? BorderRadius.circular(45),
       child: InkWell(
         onTap: onPressed,
@@ -33,7 +38,7 @@ class CustomButton extends StatelessWidget {
                   ? Icon(
                       iconData,
                       size: 20,
-                      color: Colors.white,
+                      color: textColor,
                     )
                   : SizedBox(),
               SizedBox(
@@ -45,7 +50,7 @@ class CustomButton extends StatelessWidget {
                   textAlign:
                       iconData != null ? TextAlign.start : TextAlign.center,
                   style: Theme.of(context).textTheme.button?.copyWith(
-                        color: Colors.white,
+                        color: textColor,
                       ),
                 ),
               )

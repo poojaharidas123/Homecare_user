@@ -10,6 +10,7 @@ class CustomAlertDialog extends StatelessWidget {
   final Function()? primaryOnPressed, secondaryOnPressed;
   final bool isLoading;
   final double width;
+  final Color? backgroundColor;
   const CustomAlertDialog({
     super.key,
     required this.title,
@@ -21,12 +22,14 @@ class CustomAlertDialog extends StatelessWidget {
     this.content,
     this.width = 350,
     this.isLoading = false,
+    this.backgroundColor,
   });
 
   @override
   Widget build(BuildContext context) {
     return Dialog(
-      backgroundColor: Colors.white,
+      insetPadding: const EdgeInsets.symmetric(horizontal: 20, vertical: 20),
+      backgroundColor: backgroundColor ?? Colors.white,
       shape: RoundedRectangleBorder(
         borderRadius: BorderRadius.circular(10),
       ),

@@ -1,8 +1,10 @@
 import 'package:flutter/material.dart';
 
 class CustomIconButton extends StatelessWidget {
+  final Function() onPressed;
   const CustomIconButton({
     Key? key,
+    required this.onPressed,
   }) : super(key: key);
 
   @override
@@ -10,16 +12,20 @@ class CustomIconButton extends StatelessWidget {
     return Material(
       color: Colors.white,
       shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(45)),
-      child: Padding(
-        padding: const EdgeInsets.all(15.0),
-        child: Row(
-          mainAxisAlignment: MainAxisAlignment.center,
-          children: [
-            Icon(
-              Icons.add,
-              color: Colors.grey,
-            ),
-          ],
+      child: InkWell(
+        onTap: onPressed,
+        borderRadius: BorderRadius.circular(45),
+        child: Padding(
+          padding: const EdgeInsets.all(15.0),
+          child: Row(
+            mainAxisAlignment: MainAxisAlignment.center,
+            children: const [
+              Icon(
+                Icons.add,
+                color: Colors.grey,
+              ),
+            ],
+          ),
         ),
       ),
     );

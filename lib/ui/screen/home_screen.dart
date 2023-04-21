@@ -88,7 +88,7 @@ class _HomeScreenState extends State<HomeScreen>
                 isSelected: tabController.index == 1,
               ),
               BottomNavBarButton(
-                iconData: Icons.payment_rounded,
+                iconData: Icons.settings_outlined,
                 label: "Settings",
                 onPressed: () {
                   tabController.animateTo(2);

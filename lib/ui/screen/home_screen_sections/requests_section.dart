@@ -4,7 +4,9 @@ import 'package:flutter/src/widgets/container.dart';
 import 'package:flutter/src/widgets/framework.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:homecare_user/blocs/manage_nurse_requests/manage_nurse_request_bloc.dart';
+import 'package:homecare_user/ui/widgets/complaints/add_complaint_dialog.dart';
 import 'package:homecare_user/ui/widgets/custom_button.dart';
+import 'package:homecare_user/ui/widgets/custom_icon_button.dart';
 import 'package:homecare_user/ui/widgets/label_with_text.dart';
 import 'package:homecare_user/util/postgres_time_to_time_of_day.dart';
 import 'package:intl/intl.dart';
@@ -139,12 +141,14 @@ class _RequestItemState extends State<RequestItem> {
             Row(
               mainAxisAlignment: MainAxisAlignment.spaceBetween,
               children: [
-                Text(
-                  '#${widget.requestDetails['id']}',
-                  style: Theme.of(context).textTheme.bodySmall?.copyWith(
-                        fontWeight: FontWeight.bold,
-                        color: Colors.black38,
-                      ),
+                Expanded(
+                  child: Text(
+                    '#${widget.requestDetails['id']}',
+                    style: Theme.of(context).textTheme.bodySmall?.copyWith(
+                          fontWeight: FontWeight.bold,
+                          color: Colors.black38,
+                        ),
+                  ),
                 ),
                 Text(
                   widget.requestDetails['status'],
@@ -153,6 +157,20 @@ class _RequestItemState extends State<RequestItem> {
                         color: Colors.black38,
                       ),
                 ),
+                if (widget.requestDetails['status'] == 'active')
+                  const SizedBox(width: 10),
+                if (widget.requestDetails['status'] == 'active')
+                  CustomIconButton(
+                    onPressed: () {
+                      showDialog(
+                        context: context,
+                        builder: (context) => AddComplaintDialog(
+                          requestId: widget.requestDetails['id'],
+                        ),
+                      );
+                    },
+                    iconData: Icons.report_gmailerrorred,
+                  ),
               ],
             ),
             const SizedBox(

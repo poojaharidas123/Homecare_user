@@ -1,4 +1,6 @@
 import 'package:flutter/material.dart';
+import 'package:homecare_user/ui/screen/complaints_screen.dart';
+import 'package:homecare_user/ui/screen/suggestion_screen.dart';
 import 'package:supabase_flutter/supabase_flutter.dart';
 
 import '../../widgets/change_password.dart';
@@ -35,6 +37,34 @@ class _SettingsSectionState extends State<SettingsSection> {
                   fontWeight: FontWeight.bold,
                   color: Colors.black,
                 ),
+          ),
+          const SizedBox(height: 10),
+          DrawerButton(
+            iconData: Icons.warning_amber,
+            label: 'Complaints',
+            onPressed: () {
+              Navigator.push(
+                context,
+                MaterialPageRoute(
+                  builder: (context) => const ComplaintsScreen(),
+                ),
+              );
+            },
+            isSelected: false,
+          ),
+          const SizedBox(height: 10),
+          DrawerButton(
+            iconData: Icons.info_outline,
+            label: 'Suggestions',
+            onPressed: () {
+              Navigator.push(
+                context,
+                MaterialPageRoute(
+                  builder: (context) => const SuggestionScreen(),
+                ),
+              );
+            },
+            isSelected: false,
           ),
           const SizedBox(height: 10),
           DrawerButton(

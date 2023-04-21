@@ -134,7 +134,7 @@ class BottomNavBarButton extends StatelessWidget {
             ),
             Text(
               label,
-              style: Theme.of(context).textTheme.titleMedium?.copyWith(
+              style: Theme.of(context).textTheme.bodySmall?.copyWith(
                     fontWeight: FontWeight.w500,
                     color: isSelected ? Colors.green : Colors.black54,
                   ),

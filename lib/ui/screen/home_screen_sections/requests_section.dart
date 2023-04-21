@@ -9,6 +9,8 @@ import 'package:homecare_user/ui/widgets/label_with_text.dart';
 import 'package:homecare_user/util/postgres_time_to_time_of_day.dart';
 import 'package:intl/intl.dart';
 import 'package:logger/logger.dart';
+import 'package:razorpay_flutter/razorpay_flutter.dart';
+import 'package:supabase_flutter/supabase_flutter.dart';
 
 import '../../../util/get_age.dart';
 import '../../widgets/custom_alert_dialog.dart';
@@ -265,18 +267,34 @@ class _RequestItemState extends State<RequestItem> {
                   ),
                 ],
               ),
-            if (widget.requestDetails['status'] == 'active') const Divider(),
-            if (widget.requestDetails['status'] == 'active')
+            if (widget.requestDetails['status'] == 'active' &&
+                widget.requestDetails['amount'] >
+                    widget.requestDetails['paid_amount'])
+              const Divider(),
+            if (widget.requestDetails['status'] == 'active' &&
+                widget.requestDetails['amount'] >
+                    widget.requestDetails['paid_amount'])
               CustomButton(
                 label: 'Make Payment',
-                onPressed: () {
-                  showDialog(
+                onPressed: () async {
+                  int? paid = await showDialog(
                     context: context,
                     builder: (context) => MakePaymentDialog(
                       amount: widget.requestDetails['amount'],
                       paid: widget.requestDetails['paid_amount'],
+                      requestDetails: widget.requestDetails,
                     ),
                   );
+
+                  if (paid != null) {
+                    Logger().w(paid.toString());
+                    BlocProvider.of<ManageNurseRequestBloc>(context).add(
+                      PayNurseRequestEvent(
+                        requestId: widget.requestDetails['id'],
+                        amount: paid,
+                      ),
+                    );
+                  }
                 },
               ),
           ],
@@ -288,10 +306,12 @@ class _RequestItemState extends State<RequestItem> {
 
 class MakePaymentDialog extends StatefulWidget {
   final int amount, paid;
+  final dynamic requestDetails;
   const MakePaymentDialog({
     super.key,
     required this.amount,
     required this.paid,
+    required this.requestDetails,
   });
 
   @override
@@ -300,6 +320,69 @@ class MakePaymentDialog extends StatefulWidget {
 
 class _MakePaymentDialogState extends State<MakePaymentDialog> {
   double sliderValue = 1;
+  final Razorpay _razorpay = Razorpay();
+
+  void _handlePaymentSuccess(PaymentSuccessResponse response) async {
+    await showDialog(
+      context: context,
+      builder: (context) => const CustomAlertDialog(
+        title: 'Payment Success',
+        message: 'Thank you for the payment',
+        primaryButtonLabel: 'Ok',
+      ),
+    );
+
+    Navigator.of(context).pop(sliderValue.toInt());
+  }
+
+  void _handlePaymentError(PaymentFailureResponse response) {
+    // Logger().e(response.error);
+    showDialog(
+      context: context,
+      builder: (context) => CustomAlertDialog(
+        title: 'Payment Failed',
+        message: response.message ?? 'Something went wrong, Please try again',
+        primaryButtonLabel: 'Ok',
+      ),
+    );
+  }
+
+  void _handleExternalWallet(ExternalWalletResponse response) {
+    // Do something when an external wallet was selected
+  }
+
+  @override
+  void initState() {
+    super.initState();
+    _razorpay.on(Razorpay.EVENT_PAYMENT_SUCCESS, _handlePaymentSuccess);
+    _razorpay.on(Razorpay.EVENT_PAYMENT_ERROR, _handlePaymentError);
+    _razorpay.on(Razorpay.EVENT_EXTERNAL_WALLET, _handleExternalWallet);
+  }
+
+  void makePayment() async {
+    // String orderId = await createOrder(widget.testDetails['total_price']);
+
+    var options = {
+      'key': 'rzp_test_j07YpjyCexi5xr',
+      'amount': (sliderValue.toInt()) * 100,
+      'name': 'HomeCare',
+      // 'order_id': orderId,
+      'description': '#${widget.requestDetails['id']}',
+      'prefill': {
+        'contact': '9999999999',
+        'email': Supabase.instance.client.auth.currentUser!.email,
+      }
+    };
+    Logger().w(options);
+    _razorpay.open(options);
+  }
+
+  @override
+  void dispose() {
+    _razorpay.clear(); // Removes all listeners
+    super.dispose();
+  }
+
   @override
   Widget build(BuildContext context) {
     return CustomAlertDialog(
@@ -327,7 +410,9 @@ class _MakePaymentDialogState extends State<MakePaymentDialog> {
         ],
       ),
       primaryButtonLabel: 'Pay',
-      primaryOnPressed: () {},
+      primaryOnPressed: () {
+        makePayment();
+      },
     );
   }
 }

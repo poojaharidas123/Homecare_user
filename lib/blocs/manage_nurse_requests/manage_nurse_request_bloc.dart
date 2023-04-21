@@ -50,7 +50,7 @@ class ManageNurseRequestBloc
               'amount': event.amount,
             },
           );
-          add(GetAllNurseRequestEvent());
+          add(GetAllNurseRequestEvent(status: 'active'));
         }
       } catch (e, s) {
         Logger().e('$e\n$s');

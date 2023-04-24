@@ -62,55 +62,45 @@ class _ComplaintsScreenState extends State<ComplaintsScreen> {
               }
             },
             builder: (context, state) {
-              return Column(
-                children: [
-                  const SizedBox(
-                    height: 10,
-                  ),
-                  Padding(
-                    padding: const EdgeInsets.symmetric(
-                      horizontal: 20,
-                    ),
-                    child: state is ComplaintLoadingState
-                        ? const Center(
-                            child: CircularProgressIndicator(),
-                          )
-                        : SingleChildScrollView(
-                            child: state is ComplaintSuccessState
-                                ? state.complaints.isNotEmpty
-                                    ? Wrap(
-                                        runSpacing: 15,
-                                        children: List<Widget>.generate(
-                                          state.complaints.length,
-                                          (index) => ComplaintCard(
-                                            complaintDetails:
-                                                state.complaints[index],
-                                            complaintBloc: complaintBloc,
-                                          ),
-                                        ),
-                                      )
-                                    : const Center(
-                                        child: Text(
-                                          'No complaints found!',
-                                          textAlign: TextAlign.center,
-                                        ),
-                                      )
-                                : state is ComplaintFailureState
-                                    ? Center(
-                                        child: CustomIconButton(
-                                          iconData: Icons.refresh_outlined,
-                                          color: Colors.blue,
-                                          onPressed: () {
-                                            complaintBloc
-                                                .add(GetAllComplaintEvent());
-                                          },
-                                        ),
-                                      )
-                                    : const SizedBox(),
-                          ),
-                  ),
-                ],
-              );
+              return state is ComplaintLoadingState
+                  ? const Center(
+                      child: CircularProgressIndicator(),
+                    )
+                  : SingleChildScrollView(
+                      padding: const EdgeInsets.symmetric(
+                        horizontal: 20,
+                        vertical: 20,
+                      ),
+                      child: state is ComplaintSuccessState
+                          ? state.complaints.isNotEmpty
+                              ? Wrap(
+                                  runSpacing: 15,
+                                  children: List<Widget>.generate(
+                                    state.complaints.length,
+                                    (index) => ComplaintCard(
+                                      complaintDetails: state.complaints[index],
+                                      complaintBloc: complaintBloc,
+                                    ),
+                                  ),
+                                )
+                              : const Center(
+                                  child: Text(
+                                    'No complaints found!',
+                                    textAlign: TextAlign.center,
+                                  ),
+                                )
+                          : state is ComplaintFailureState
+                              ? Center(
+                                  child: CustomIconButton(
+                                    iconData: Icons.refresh_outlined,
+                                    color: Colors.blue,
+                                    onPressed: () {
+                                      complaintBloc.add(GetAllComplaintEvent());
+                                    },
+                                  ),
+                                )
+                              : const SizedBox(),
+                    );
             },
           ),
         ),

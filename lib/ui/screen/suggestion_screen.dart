@@ -86,55 +86,47 @@ class _SuggestionScreenState extends State<SuggestionScreen> {
               }
             },
             builder: (context, state) {
-              return Column(
-                children: [
-                  const SizedBox(
-                    height: 20,
-                  ),
-                  Padding(
-                    padding: const EdgeInsets.symmetric(
-                      horizontal: 20,
-                    ),
-                    child: state is SuggestionLoadingState
-                        ? const Center(
-                            child: CircularProgressIndicator(),
-                          )
-                        : SingleChildScrollView(
-                            child: state is SuggestionSuccessState
-                                ? state.suggestions.isNotEmpty
-                                    ? Wrap(
-                                        runSpacing: 15,
-                                        children: List<Widget>.generate(
-                                          state.suggestions.length,
-                                          (index) => SuggestionCard(
-                                            suggestionDetails:
-                                                state.suggestions[index],
-                                            suggestionBloc: suggestionBloc,
-                                          ),
-                                        ),
-                                      )
-                                    : const Center(
-                                        child: Text(
-                                          'No suggestions found!\nClick on + button on the appbar to send a suggestion',
-                                          textAlign: TextAlign.center,
-                                        ),
-                                      )
-                                : state is SuggestionFailureState
-                                    ? Center(
-                                        child: CustomIconButton(
-                                          iconData: Icons.refresh_outlined,
-                                          color: Colors.blue,
-                                          onPressed: () {
-                                            suggestionBloc
-                                                .add(GetAllSuggestionEvent());
-                                          },
-                                        ),
-                                      )
-                                    : const SizedBox(),
-                          ),
-                  ),
-                ],
-              );
+              return state is SuggestionLoadingState
+                  ? const Center(
+                      child: CircularProgressIndicator(),
+                    )
+                  : SingleChildScrollView(
+                      padding: const EdgeInsets.symmetric(
+                        horizontal: 20,
+                        vertical: 20,
+                      ),
+                      child: state is SuggestionSuccessState
+                          ? state.suggestions.isNotEmpty
+                              ? Wrap(
+                                  runSpacing: 15,
+                                  children: List<Widget>.generate(
+                                    state.suggestions.length,
+                                    (index) => SuggestionCard(
+                                      suggestionDetails:
+                                          state.suggestions[index],
+                                      suggestionBloc: suggestionBloc,
+                                    ),
+                                  ),
+                                )
+                              : const Center(
+                                  child: Text(
+                                    'No suggestions found!\nClick on + button on the appbar to send a suggestion',
+                                    textAlign: TextAlign.center,
+                                  ),
+                                )
+                          : state is SuggestionFailureState
+                              ? Center(
+                                  child: CustomIconButton(
+                                    iconData: Icons.refresh_outlined,
+                                    color: Colors.blue,
+                                    onPressed: () {
+                                      suggestionBloc
+                                          .add(GetAllSuggestionEvent());
+                                    },
+                                  ),
+                                )
+                              : const SizedBox(),
+                    );
             },
           ),
         ),
